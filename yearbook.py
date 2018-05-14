@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+from Clawer_Base.db_io import get_filepath
+from Clawer_Base.db_io import Excel_merger
 
 def clean(raw_num):
     if isinstance(raw_num, str):
@@ -16,9 +18,53 @@ def clean(raw_num):
     else:
         return raw_num
 
+def remove_list(num1, num2):
+    del_keys =[]
+    confirm_keys = [np.nan,
+                    u'城市',
+                    'Population',
+                    'Total Land Area and Population Density of Administrative Region'
+                    ]
+    del_keys.extend(confirm_keys)
+    for i in range(10):
+        iteration_key = ['%s-%s续表%s' % (num1, num2, i),
+                         '%s--%s续表%s' % (num1, num2, i),
+                         '%s—%s续表%s' % (num1, num2, i),
+                         '%s-%s 续表%s' % (num1, num2, i),
+                         '%s-%s 续表%s continued %s' % (num1, num2, i, i),
+                         '%s-%s 续表%s continued' % (num1, num2, i),
+                         '%s-%s 续表 %s continued' % (num1, num2, i)
+                         ]
+        del_keys.extend(iteration_key)
+    return del_keys
+
 def people_clean(year):
-    dfs = pd.read_excel(r'D:\Downloads\2-1人口\xlsx\%s.xlsx'%year, None)
-    col_name = [
+    dfs = pd.read_excel(r'D:\Downloads\2-11土地资源\xlsx\%s.xlsx'%year, None)
+    land_col_name =[
+        '城市',
+        # 'city',
+        '1993全市土地面积(sq.km)',
+        '1993市辖区土地面积(sq.km)',
+        '1993市辖区建成区面积(sq.km)',
+        # '全市建成区面积区面积(sq.km)',
+        # '建成区绿化覆盖面积（公顷）',
+        # '建成区道路绿化覆盖（公顷）',
+        # '市辖区城市建设用地面积(sq.km)',
+        # '全市基建占用耕地面积（亩）',
+        # '市区基建占用耕地面积（亩）',
+        '1992全市人口密度(person/sq.km)',
+        '1993全市人口密度(person/sq.km)',
+        '1992市辖区人口密度(person/sq.km)',
+        '1993市辖区人口密度(person/sq.km)'
+        # '全市耕地总资源(千公顷)',
+        # '市辖区耕地面积(千公顷)',
+        # '园林绿地面积(公顷)',
+        # '全市人均占自耕地面积额(亩）'
+        # '基建占用耕地面积(亩)'
+        # '建成区绿化覆盖率(%)'
+        # '市辖区居住用地面积(sq.km)'
+    ]
+    peo_col_name = [
         '城市',
         '全市总人口（万人）',
         '市辖区总人口（万人）',
@@ -42,18 +88,12 @@ def people_clean(year):
     for df in dfs.items():
         df = df[1]
         print(df)
-        del_key1 = ['2-1续表%s' % i for i in range(10)]
-        del_key2 = ['2—1续表%s' % i for i in range(10)]
-        del_key3 = ['2--1续表%s' % i for i in range(10)]
-        del_key4 = ['2-1 续表%s' % i for i in range(10)]
-        del_key5 = ['2-1 续表%s continued %s' %(i, i) for i in range(10)]
-        del_key6 = [np.nan, u'城市', 'Population']
-        del_key = del_key1 + del_key2 + del_key3 + del_key4 + del_key5 + del_key6
-        df.columns = col_name
+        del_key = remove_list(2, 11)
+        df.columns = land_col_name
         df = df[True-df[u'城市'].isin(del_key)]
         df[u'城市'] = df[u'城市'].map(str.strip)
         df = df[True-df[u'城市'].isin(del_key)]
-        for i in col_name[1:]:
+        for i in land_col_name[1:]:
             df[i] = df[i].map(clean)
         df = df.set_index(u'城市')
         df['年份'] = year
@@ -61,7 +101,26 @@ def people_clean(year):
         df_list.append(df)
     if len(df_list) > 1:
         df = pd.concat(df_list)
-    df.to_excel(r'D:\Downloads\2-1人口\cleaned\%s.xlsx'%year)
+    df.to_excel(r'D:\Downloads\2-11土地资源\cleaned\%s.xlsx'%year)
+
+class Yearbook_merge(Excel_merger):
+    def process(self):
+        df = self.merge()
+        self.saver(df)
+
 
 if __name__ == "__main__":
-    people_clean('1995-1')
+    # print(remove_list(2, 11))
+    people_clean('1993-1994')
+    # yearbook_merge = Yearbook_merge(r'D:\Downloads\2-1人口\cleaned')
+    # trans_df = pd.read_excel(r'D:\Downloads\2-1人口\translate\transfile.xlsx', index_col='shortname')
+    # res_df = pd.read_excel(r'D:\Downloads\2-1人口\cleaned\merged.xlsx')
+    # def name_transform(raw_str):
+    #     trans_df_index = trans_df.index
+    #     if raw_str in trans_df_index:
+    #         return trans_df.ix[raw_str, 'fullname']
+    #     else:
+    #         return raw_str
+    # res_df[u'城市'] = res_df[u'城市'].map(name_transform)
+    # res_df.to_excel(r'D:\Downloads\2-1人口\cleaned\name_transed.xlsx')
+
