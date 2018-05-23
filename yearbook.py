@@ -39,6 +39,7 @@ def remove_list(num1, num2):
     return del_keys
 
 def people_clean(year):
+<<<<<<< HEAD
     dfs = pd.read_excel(r'D:\program_lib\yearbook\yearbook\result\2-12 土地资源\xlsx\%s.xlsx'%year, None)
     land_col_name =[
         '城市',
@@ -46,23 +47,42 @@ def people_clean(year):
         '城市建设用地面积(sq.km)',
         '居住用地面积面积(sq.km)',
         '城市建设用地占市区面积比重(%)'
+=======
+    dfs = pd.read_excel(r'D:\Downloads\2-12 土地资源\xlsx\%s.xlsx'%year, None)
+    land_col_name =[
+        '城市',
+        # 'city',
+        # '1993全市土地面积(sq.km)',
+        # '1993市辖区土地面积(sq.km)',
+        # '1993市辖区建成区面积(sq.km)',
+>>>>>>> 9b09a13c28740c70de347d9302991dbe4c657beb
         # '全市建成区面积区面积(sq.km)',
         # '建成区绿化覆盖面积（公顷）',
         # '建成区道路绿化覆盖（公顷）',
-        # '市辖区城市建设用地面积(sq.km)',
+
         # '全市基建占用耕地面积（亩）',
         # '市区基建占用耕地面积（亩）',
+<<<<<<< HEAD
         # '1992全市人口密度(person/sq.km)',
         # '1993全市人口密度(person/sq.km)',
         # '1992市辖区人口密度(person/sq.km)',
+=======
+        '全市人口密度(person/sq.km)',
+        # '1993全市人口密度(person/sq.km)',
+        '市辖区人口密度(person/sq.km)',
+        # '市辖区城市建设用地面积(sq.km)',
+>>>>>>> 9b09a13c28740c70de347d9302991dbe4c657beb
         # '1993市辖区人口密度(person/sq.km)'
         # '全市耕地总资源(千公顷)',
         # '市辖区耕地面积(千公顷)',
         # '园林绿地面积(公顷)',
         # '全市人均占自耕地面积额(亩）'
         # '基建占用耕地面积(亩)'
-        # '建成区绿化覆盖率(%)'
-        # '市辖区居住用地面积(sq.km)'
+        # '市辖区居住用地面积(sq.km)',
+        # '城市建设用地占市区面积比重(%)'
+        '人均占有耕地资源(亩/人)',
+        '市辖区人均占有耕地资源(亩/人)',
+        '建成区绿化覆盖率(%)'
     ]
     peo_col_name = [
         '城市',
@@ -102,7 +122,11 @@ def people_clean(year):
         df_list.append(df)
     if len(df_list) > 1:
         df = pd.concat(df_list)
+<<<<<<< HEAD
     df.to_excel(r'D:\program_lib\yearbook\yearbook\result\2-12 土地资源\cleaned\%s.xlsx'%year)
+=======
+    df.to_excel(r'D:\Downloads\2-12 土地资源\cleaned\%s.xlsx'%year)
+>>>>>>> 9b09a13c28740c70de347d9302991dbe4c657beb
 
 class Yearbook_merge(Excel_merger):
     def process(self):
@@ -112,7 +136,11 @@ class Yearbook_merge(Excel_merger):
 
 if __name__ == "__main__":
     # print(remove_list(2, 11))
+<<<<<<< HEAD
     people_clean(2016)
+=======
+    people_clean('1996')
+>>>>>>> 9b09a13c28740c70de347d9302991dbe4c657beb
     # yearbook_merge = Yearbook_merge(r'D:\Downloads\2-1人口\cleaned')
     # trans_df = pd.read_excel(r'D:\Downloads\2-1人口\translate\transfile.xlsx', index_col='shortname')
     # res_df = pd.read_excel(r'D:\Downloads\2-1人口\cleaned\merged.xlsx')
